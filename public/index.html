@@ -135,6 +135,7 @@
         font-size: 36px;
         line-height: 1.05;
         margin: 0 0 6px;
+        text-transform: lowercase;
       }
 
       .sub {
@@ -192,11 +193,14 @@
         border-radius: 30px;
         padding: 18px 18px 20px;
         min-height: 270px;
+        display: flex;
+        flex-direction: column;
       }
 
       .slides-container {
         position: relative;
         height: 100%;
+        flex: 1;
       }
 
       .slide {
@@ -218,7 +222,7 @@
         border-radius: 26px;
         background: #020617;
         border: 2px solid #020617;
-        padding: 20px 22px 18px;
+        padding: 22px 24px 20px;
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -306,19 +310,20 @@
       }
 
       .slide-title {
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 800;
         margin-bottom: 8px;
+        text-transform: lowercase;
       }
 
       .slide-main {
-        font-size: 38px;
+        font-size: 40px;
         font-weight: 900;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
       }
 
       .slide-sub {
-        font-size: 14px;
+        font-size: 16px;
         color: var(--muted);
       }
 
@@ -326,8 +331,8 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
         gap: 8px 14px;
-        margin-top: 12px;
-        font-size: 13px;
+        margin-top: 14px;
+        font-size: 14px;
         color: var(--muted);
       }
 
@@ -412,29 +417,56 @@
         color: var(--muted);
       }
 
+      /* Mobile: make everything TRUE full-screen */
       @media (max-width: 768px) {
+        body {
+          align-items: stretch;
+        }
         .shell {
-          padding: 10px;
+          padding: 0;
+          max-width: none;
         }
         .card {
-          border-radius: 32px;
-          padding: 18px 14px 14px;
-          min-height: calc(100vh - 20px);
+          border-radius: 0;
+          padding: 0;
+          min-height: 100vh;
+        }
+        .card::after {
+          inset: 0;
+          border-radius: 0;
+        }
+        .card-inner {
+          padding: 12px 10px 10px;
         }
         .heading-block {
           max-width: 100%;
         }
+        .header-row {
+          margin-bottom: 6px;
+        }
         h1 {
-          font-size: 28px;
+          font-size: 26px;
         }
-        .slide-main {
-          font-size: 30px;
-        }
-        .slide-title {
-          font-size: 18px;
+        .slides-shell {
+          margin-top: 4px;
         }
         .slides-frame {
-          padding: 14px;
+          border-radius: 24px;
+          padding: 8px 8px 10px;
+          min-height: calc(100vh - 80px);
+        }
+        .slide-inner {
+          border-radius: 20px;
+          padding: 18px 16px 16px;
+        }
+        .slide-title {
+          font-size: 20px;
+        }
+        .slide-main {
+          font-size: 34px;
+        }
+        .slide-sub {
+          font-size: 14px;
         }
       }
     </style>
@@ -491,6 +523,7 @@
       const subtitleEl = document.getElementById("subtitle");
       const errorEl = document.getElementById("error");
       const slidesFrameEl = document.getElementById("slides-frame");
+      const headerRowEl = document.querySelector(".header-row");
 
       let slides = [];
       let currentIndex = 0;
@@ -508,6 +541,7 @@
         return (seconds / 3600).toFixed(1);
       }
 
+      // backend returns fastestPace as sec per km; convert to sec per mile
       function formatPaceFromSecPerKm(secPerKm) {
         if (!secPerKm || !isFinite(secPerKm)) return "-";
         const secPerMile = secPerKm * 1.609344;
@@ -672,7 +706,7 @@
                 <div class="slide-content">
                   <div class="slide-top">
                     <div class="slide-text-block">
-                      <div class="slide-tag">Fastest Run</div>
+                      <div class="slide-tag">Fastest run</div>
                       <div class="slide-title">${
                         stats.fastestRun.name || "Fastest run"
                       }</div>
@@ -683,7 +717,7 @@
                         over ${formatMiles(
                           stats.fastestRun.distance,
                           1
-                        )} miles. This was your sharpest speed of the year.
+                        )} miles. This was your sharpest speed day of the year.
                       </div>
                       <div class="stat-list">
                         <div><strong>Distance</strong><br>${formatMiles(
@@ -783,7 +817,7 @@
                 <div class="slide-content">
                   <div class="slide-top">
                     <div class="slide-text-block">
-                      <div class="slide-tag">Big Ride</div>
+                      <div class="slide-tag">Big ride</div>
                       <div class="slide-title">${
                         stats.longestRide.name || "Longest ride"
                       }</div>
@@ -837,7 +871,7 @@
                 <div class="slide-content">
                   <div class="slide-top">
                     <div class="slide-text-block">
-                      <div class="slide-tag">Biggest Climb Day</div>
+                      <div class="slide-tag">Biggest climb day</div>
                       <div class="slide-title">${
                         stats.highestElev.name || "Biggest climb"
                       }</div>
@@ -997,9 +1031,9 @@
           });
 
           if (res.status === 401) {
-            titleEl.textContent = "Your Strava Wrapped";
+            titleEl.textContent = "your strava wrapped.";
             subtitleEl.textContent =
-              "Tap to connect Strava and watch your recap unfold, Spotify Wrapped–style.";
+              "Tap to connect Strava and watch your recap unfold, Spotify-style.";
             loginSection.style.display = "block";
             return;
           }
@@ -1011,7 +1045,8 @@
           const data = await res.json();
           const { athleteName, stats } = data;
 
-          titleEl.textContent = `${athleteName || "Athlete"}, this is your year in motion.`;
+          // Set intro text once, then hide header and go full-screen slides
+          titleEl.textContent = `${(athleteName || "athlete").toLowerCase()}, this is your year in motion.`;
           subtitleEl.textContent =
             "Swipe through bold cards of your total miles, fastest run, longest days, and biggest climbs.";
 
@@ -1024,6 +1059,11 @@
 
           renderSlides(defs);
           slidesShell.style.display = "block";
+
+          // hide header once slides are ready (full-screen effect)
+          if (headerRowEl) {
+            headerRowEl.style.display = "none";
+          }
 
           if (stats.fastestRun && stats.fastestRun.map && stats.fastestRun.map.summary_polyline) {
             renderPolylineToSvg(
