@@ -1,49 +1,337 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Strava Wrapped</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #020617;
+        --card: #020617;
+        --accent1: #f97316;
+        --accent2: #ec4899;
+        --accent3: #6366f1;
+        --text: #f9fafb;
+        --muted: #9ca3af;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(249, 115, 22, 0.35), transparent 55%),
+          radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.4), #020617 60%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      .card {
+        width: 100%;
+        max-width: 880px;
+        border-radius: 32px;
+        padding: 24px 24px 28px;
+        background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.02), transparent 50%),
+          linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.99));
+        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.3);
+      }
+      .pill {
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      h1 {
+        font-size: 32px;
+        line-height: 1.1;
+        margin: 0 0 16px;
+      }
+      p {
+        margin: 0;
+      }
+      .sub {
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 20px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      .stat {
+        border-radius: 24px;
+        padding: 12px 14px;
+        background: linear-gradient(
+          135deg,
+          rgba(15, 23, 42, 0.92),
+          rgba(15, 23, 42, 0.98)
+        );
+        border: 1px solid rgba(148, 163, 184, 0.35);
+      }
+      .stat-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .stat-value {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .stat-sub {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .hero-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 18px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        border-radius: 999px;
+        border: none;
+        outline: none;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        background-image: linear-gradient(
+          135deg,
+          var(--accent1),
+          var(--accent2),
+          var(--accent3)
+        );
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.9);
+        cursor: pointer;
+      }
+      .btn span {
+        margin-left: 8px;
+        font-size: 16px;
+      }
+      .error {
+        color: #fecaca;
+        font-size: 13px;
+        margin-top: 8px;
+      }
+      .footer {
+        margin-top: 18px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      @media (max-width: 600px) {
+        .card {
+          border-radius: 24px;
+          padding: 18px 16px 22px;
+        }
+        h1 {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="pill">Strava Wrapped · Last 12 months</div>
+      <h1 id="title">Loading your year in motion…</h1>
+      <p id="subtitle" class="sub"></p>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Netlify example: Serverless functions</title>
-    <link rel="stylesheet" href="/css/styles.css" />
-</head>
-
-<body>
-    <div class="container">
-        <h1>Example: Hello Netlify Functions</h1>
-        <p>
-            A hello world example of using Netlify Functions to add serverless functions to your project.
+      <div id="login-section" style="margin-bottom: 16px; display: none;">
+        <button id="login-btn" class="btn">
+          <span>🔗</span> <span>Log in with Strava</span>
+        </button>
+        <p class="sub">
+          Connect Strava to see your fastest run, longest ride, biggest climb,
+          peak month, and more.
         </p>
-        <p>
-            To add Netlify Functions, create a JavaScript, TypeScript, or Go function to your project in a <code>netlify/functions</code> directory. You can customize the address for your functions using Netlify's Redirects API
-        </p>
-        <h2>Examples</h2>
-        <ul>
-            <li><a href="/.netlify/functions/hello?name=you">Hello World</a> ( /.netlify/functions/hello?name=you )</li>
-            <li><a href="/api/hello?name=you">Hello World</a> ( /api/hello?name=you )</li>
-        </ul>
+      </div>
 
+      <div id="stats-section" style="display: none;">
+        <div class="grid" id="stats-grid"></div>
+      </div>
 
-        <h2>More information</h2>
-        <ul>
-            <li><a href="https://www.netlify.com/products/functions/?utm_campaign=dx-examples&utm_source=example-site&utm_medium=web&utm_content=example-hello-functions">About Netlify Functions</a></li>
-            <li><a href="https://docs.netlify.com/functions/overview/?utm_campaign=dx-examples&utm_source=example-site&utm_medium=web&utm_content=example-hello-functions">Docs: Netlify Functions</a></li>
-            <li><a href="https://docs.netlify.com/functions/logs/?utm_campaign=dx-examples&utm_source=example-site&utm_medium=web&utm_content=example-hello-functions">Accessing your function logs</a></li>
-            <li><a href="https://functions.netlify.com/?utm_campaign=dx-examples&utm_source=example-site&utm_medium=web&utm_content=example-hello-functions">Learn serverless in the functions playground</a></li>
-        </ul>
+      <div id="error" class="error"></div>
 
-        <h2>Deploy your own</h2>
-        <p>
-            A great place to start is to clone and deploy your own copy of this example. You can do that by clicking the button below.
-        </p>
-        <p>
-            Try it! 👉
-            <a href="https://app.netlify.com/start/deploy?repository=https://github.com/netlify/example-hello-world-functions&utm_campaign=dx-examples"><img src="https://www.netlify.com/img/deploy/button.svg" class="dtn" alt="Deploy to Netlify"></a>
-        </p>
+      <div class="footer">
+        Prototype only. Tokens are stored in a secure, HttpOnly cookie via
+        Netlify Functions.
+      </div>
+    </main>
 
-        <p><small>Clicking the button will clone <a href="https://github.com/netlify/example-hello-world-functions">this repo</a> and deploy it as a new site on <a href="https://netlify.com/?utm_campaign=dx-examples">Netlify</a></small></p>
-    </div>
+    <script>
+      const loginBtn = document.getElementById("login-btn");
+      const loginSection = document.getElementById("login-section");
+      const statsSection = document.getElementById("stats-section");
+      const statsGrid = document.getElementById("stats-grid");
+      const titleEl = document.getElementById("title");
+      const subtitleEl = document.getElementById("subtitle");
+      const errorEl = document.getElementById("error");
 
-</body>
+      function formatKm(meters) {
+        return (meters / 1000).toFixed(1);
+      }
 
+      function formatHours(seconds) {
+        return (seconds / 3600).toFixed(1);
+      }
+
+      function formatPace(secondsPerKm) {
+        const total = secondsPerKm / 60;
+        const min = Math.floor(total);
+        const sec = Math.round((total - min) * 60)
+          .toString()
+          .padStart(2, "0");
+        return `${min}:${sec} / km`;
+      }
+
+      function monthLabel(ym) {
+        const [year, m] = ym.split("-");
+        const monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec"
+        ];
+        return `${monthNames[parseInt(m, 10) - 1]} ${year}`;
+      }
+
+      function renderStats(data) {
+        const { athleteName, stats } = data;
+        titleEl.textContent = `${
+          athleteName || "Athlete"
+        }, this was your year in motion.`;
+
+        subtitleEl.textContent = `Across your runs and rides, we crunched the last 12 months of Strava data into a mini Wrapped.`;
+
+        statsGrid.innerHTML = "";
+
+        function addStat(label, value, sub) {
+          const div = document.createElement("div");
+          div.className = "stat";
+          div.innerHTML = `
+            <div class="stat-label">${label}</div>
+            <div class="stat-value">${value}</div>
+            <div class="stat-sub">${sub}</div>
+          `;
+          statsGrid.appendChild(div);
+        }
+
+        addStat(
+          "Total distance",
+          `${formatKm(stats.totalDistance)} km`,
+          `${formatHours(stats.totalMovingTime)} hours moving`
+        );
+
+        if (stats.fastestRun && stats.fastestPace) {
+          addStat(
+            "Fastest run",
+            formatPace(stats.fastestPace),
+            `${formatKm(stats.fastestRun.distance)} km · ${
+              stats.fastestRun.name || "Run"
+            }`
+          );
+        }
+
+        if (stats.longestRun) {
+          addStat(
+            "Longest run",
+            `${formatKm(stats.longestRun.distance)} km`,
+            stats.longestRun.name || "Run"
+          );
+        }
+
+        if (stats.longestRide) {
+          addStat(
+            "Longest ride",
+            `${formatKm(stats.longestRide.distance)} km`,
+            stats.longestRide.name || "Ride"
+          );
+        }
+
+        if (stats.highestElev) {
+          addStat(
+            "Biggest climb day",
+            `${Math.round(stats.highestElev.total_elevation_gain)} m`,
+            stats.highestElev.name || "Activity"
+          );
+        }
+
+        if (stats.peakMonth && stats.peakDistance) {
+          addStat(
+            "Peak month",
+            monthLabel(stats.peakMonth),
+            `${formatKm(stats.peakDistance)} km that month`
+          );
+        }
+
+        statsSection.style.display = "block";
+      }
+
+      async function loadStats() {
+        errorEl.textContent = "";
+        loginSection.style.display = "none";
+        statsSection.style.display = "none";
+
+        try {
+          const res = await fetch(
+            "/.netlify/functions/strava?mode=stats",
+            {
+              credentials: "include"
+            }
+          );
+
+          if (res.status === 401) {
+            titleEl.textContent = "Your Strava Wrapped";
+            subtitleEl.textContent =
+              "Connect Strava to see your fastest efforts, longest days, and biggest climbs.";
+            loginSection.style.display = "block";
+            return;
+          }
+
+          if (!res.ok) {
+            throw new Error("Failed to load stats");
+          }
+
+          const data = await res.json();
+          renderStats(data);
+        } catch (err) {
+          console.error(err);
+          titleEl.textContent = "Something went wrong";
+          subtitleEl.textContent = "";
+          errorEl.textContent =
+            "We couldn't load your stats right now. Try disconnecting and reconnecting in Strava settings, or refresh the page.";
+        }
+      }
+
+      loginBtn.addEventListener("click", () => {
+        window.location.href =
+          "/.netlify/functions/strava?mode=auth";
+      });
+
+      loadStats();
+    </script>
+  </body>
 </html>
