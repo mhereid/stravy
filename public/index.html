@@ -6,187 +6,344 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       :root {
-        --bg: #020617;
-        --card: #020617;
-        --accent1: #f97316;
-        --accent2: #ec4899;
-        --accent3: #6366f1;
+        --bg: #000000;
         --text: #f9fafb;
         --muted: #9ca3af;
+        --accent-pink: #ec4899;
+        --accent-orange: #f97316;
+        --accent-yellow: #facc15;
+        --accent-cyan: #22d3ee;
+        --accent-green: #22c55e;
+        --accent-blue: #6366f1;
       }
+
       * {
         box-sizing: border-box;
       }
+
+      html,
       body {
         margin: 0;
-        min-height: 100vh;
+        padding: 0;
+        height: 100%;
+      }
+
+      body {
         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at top left, rgba(249, 115, 22, 0.35), transparent 55%),
-          radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.4), #020617 60%);
+          radial-gradient(circle at 0% 0%, #f97316 0, transparent 45%),
+          radial-gradient(circle at 100% 0%, #22c55e 0, transparent 45%),
+          radial-gradient(circle at 0% 100%, #6366f1 0, transparent 50%),
+          radial-gradient(circle at 100% 100%, #ec4899 0, #000 65%);
         display: flex;
-        align-items: center;
+        align-items: stretch;
         justify-content: center;
-        padding: 16px;
       }
+
+      .shell {
+        width: 100%;
+        max-width: 1100px;
+        padding: 16px;
+        margin: auto;
+      }
+
       .card {
         width: 100%;
-        max-width: 880px;
+        min-height: min(700px, 100vh - 32px);
+        border-radius: 40px;
+        padding: 22px 22px 18px;
+        display: flex;
+        flex-direction: column;
+        background: #000;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.95);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before,
+      .card::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .card::before {
+        inset: -40%;
+        background:
+          conic-gradient(
+            from 150deg,
+            rgba(250, 204, 21, 0.9),
+            rgba(34, 211, 238, 0.9),
+            rgba(236, 72, 153, 0.9),
+            rgba(99, 102, 241, 0.9),
+            rgba(249, 115, 22, 0.9),
+            rgba(250, 204, 21, 0.9)
+          );
+        opacity: 0.45;
+        filter: blur(30px);
+      }
+
+      .card::after {
+        inset: 16px;
         border-radius: 32px;
-        padding: 24px 24px 28px;
-        background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.02), transparent 50%),
-          linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.99));
-        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.85);
-        border: 1px solid rgba(148, 163, 184, 0.3);
+        background: radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.1), transparent 45%),
+          radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1));
+        border: 1px solid rgba(148, 163, 184, 0.4);
       }
+
+      .card-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: flex-start;
+        margin-bottom: 18px;
+      }
+
+      .heading-block {
+        max-width: 70%;
+      }
+
       .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         text-transform: uppercase;
-        letter-spacing: 0.16em;
-        font-size: 11px;
+        letter-spacing: 0.2em;
+        font-size: 10px;
         color: var(--muted);
-        margin-bottom: 6px;
+        margin-bottom: 12px;
       }
+
+      .pill-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 30% 30%, #fff, #f97316, #ec4899);
+      }
+
       h1 {
-        font-size: 32px;
-        line-height: 1.1;
-        margin: 0 0 8px;
+        font-size: 36px;
+        line-height: 1.05;
+        margin: 0 0 6px;
       }
+
       .sub {
         font-size: 14px;
         color: var(--muted);
-        margin: 0 0 16px;
+        margin: 0;
       }
+
       .login-wrapper {
-        margin-top: 12px;
+        margin-top: 6px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
       }
+
       .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 10px 20px;
+        padding: 12px 24px;
         border-radius: 999px;
         border: none;
         outline: none;
         text-decoration: none;
         font-size: 14px;
-        font-weight: 600;
-        color: #fff;
-        background-image: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3));
-        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.9);
+        font-weight: 700;
+        color: #020617;
+        background-image: linear-gradient(
+          135deg,
+          #f9fafb,
+          #fbbf24,
+          #22c55e
+        );
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.95);
         cursor: pointer;
-      }
-      .btn span {
-        margin-left: 8px;
-        font-size: 16px;
-      }
-      .error {
-        color: #fecaca;
-        font-size: 13px;
-        margin-top: 6px;
-      }
-      .footer {
-        margin-top: 16px;
-        font-size: 11px;
-        color: var(--muted);
+        white-space: nowrap;
       }
 
-      /* Slides */
-      .slides-shell {
-        margin-top: 12px;
+      .btn span:first-child {
+        margin-right: 8px;
+        font-size: 18px;
       }
+
+      .slides-shell {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+      }
+
       .slides-frame {
         position: relative;
+        flex: 1;
         overflow: hidden;
-        border-radius: 24px;
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.98));
-        padding: 14px 16px 16px;
-        min-height: 220px;
+        border-radius: 30px;
+        padding: 18px 18px 20px;
+        min-height: 270px;
       }
+
       .slides-container {
         position: relative;
+        height: 100%;
       }
+
       .slide {
         opacity: 0;
         pointer-events: none;
         position: absolute;
         inset: 0;
-        padding-right: 4px;
         transition: opacity 260ms ease-out;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
       }
+
       .slide.active {
         opacity: 1;
         pointer-events: auto;
         position: relative;
       }
-      .slide-title {
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 4px;
+
+      .slide-inner {
+        border-radius: 26px;
+        background: #020617;
+        border: 2px solid #020617;
+        padding: 20px 22px 18px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
       }
+
+      .slide-inner::before,
+      .slide-inner::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        opacity: 0.85;
+        mix-blend-mode: screen;
+      }
+
+      .slide-inner--overview::before {
+        inset: -40%;
+        background: linear-gradient(135deg, #f97316, #ec4899, #22d3ee);
+      }
+
+      .slide-inner--fastest::before {
+        inset: -40%;
+        background: linear-gradient(145deg, #ec4899, #6366f1, #22c55e);
+      }
+
+      .slide-inner--longrun::before {
+        inset: -40%;
+        background: linear-gradient(155deg, #22d3ee, #6366f1, #facc15);
+      }
+
+      .slide-inner--ride::before {
+        inset: -40%;
+        background: linear-gradient(160deg, #22c55e, #0ea5e9, #f97316);
+      }
+
+      .slide-inner--climb::before {
+        inset: -40%;
+        background: linear-gradient(150deg, #6366f1, #f97316, #facc15);
+      }
+
+      .slide-inner::after {
+        inset: 10px;
+        border-radius: 20px;
+        background: radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.7), transparent 55%),
+          radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1));
+      }
+
+      .slide-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .slide-top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: flex-start;
+        flex: 1;
+      }
+
+      .slide-text-block {
+        flex: 2;
+        min-width: 210px;
+      }
+
+      .slide-side-block {
+        flex: 1.3;
+        min-width: 140px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
       .slide-tag {
-        font-size: 12px;
+        font-size: 11px;
         text-transform: uppercase;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.22em;
         color: var(--muted);
-        margin-bottom: 4px;
+        margin-bottom: 8px;
       }
+
+      .slide-title {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+
       .slide-main {
-        font-size: 24px;
-        font-weight: 700;
+        font-size: 38px;
+        font-weight: 900;
         margin-bottom: 6px;
       }
+
       .slide-sub {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .stat-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+        gap: 8px 14px;
+        margin-top: 12px;
         font-size: 13px;
         color: var(--muted);
       }
-      .slide-body {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px 16px;
-        align-items: flex-start;
-        margin-top: 8px;
-      }
-      .slide-text-block {
-        flex: 2;
-        min-width: 180px;
-      }
-      .slide-side-block {
-        flex: 1;
-        min-width: 140px;
+
+      .stat-list strong {
+        color: var(--text);
+        font-weight: 650;
       }
 
       .slides-footer {
-        margin-top: 10px;
+        margin-top: 12px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
       }
-      .nav-buttons {
-        display: flex;
-        gap: 8px;
-      }
-      .nav-btn {
-        width: 28px;
-        height: 28px;
-        border-radius: 999px;
-        border: 1px solid rgba(148, 163, 184, 0.5);
-        background: rgba(15, 23, 42, 0.9);
-        color: var(--muted);
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
-      .nav-btn:active {
-        transform: translateY(1px);
-      }
+
       .dots {
         display: flex;
         gap: 6px;
@@ -194,117 +351,135 @@
         justify-content: center;
         flex: 1;
       }
+
       .dot {
-        width: 7px;
-        height: 7px;
+        width: 8px;
+        height: 8px;
         border-radius: 999px;
         border: none;
         padding: 0;
-        background: rgba(148, 163, 184, 0.5);
+        background: rgba(148, 163, 184, 0.7);
         cursor: pointer;
       }
+
       .dot.active {
-        width: 18px;
+        width: 22px;
         background: #f9fafb;
       }
+
       .slides-hint {
         font-size: 11px;
         color: var(--muted);
+        text-align: right;
       }
 
-      /* Route maps */
       .route-map {
         width: 100%;
         max-width: 260px;
         aspect-ratio: 4 / 3;
-        border-radius: 18px;
-        background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.7), rgba(15, 23, 42, 1));
-        box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
+        border-radius: 22px;
+        background: radial-gradient(circle at 0% 0%, #22d3ee, #020617 70%);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
       }
+
       .route-map-bg {
-        fill: rgba(15, 23, 42, 0.85);
+        fill: rgba(15, 23, 42, 0.95);
       }
+
       .route-map-path {
         fill: none;
-        stroke: #fbbf24;
+        stroke: #facc15;
         stroke-width: 1.8;
         stroke-linecap: round;
         stroke-linejoin: round;
       }
+
       .route-map-overlay {
         fill: none;
         stroke: rgba(15, 23, 42, 0.9);
         stroke-width: 0.6;
       }
 
-      .stat-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 8px 14px;
-        margin-top: 10px;
+      .error {
+        color: #fecaca;
         font-size: 13px;
-        color: var(--muted);
-      }
-      .stat-list strong {
-        color: var(--text);
-        font-weight: 600;
+        margin-top: 6px;
       }
 
-      @media (max-width: 600px) {
+      .footer {
+        margin-top: 12px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      @media (max-width: 768px) {
+        .shell {
+          padding: 10px;
+        }
         .card {
-          border-radius: 24px;
-          padding: 18px 14px 22px;
+          border-radius: 32px;
+          padding: 18px 14px 14px;
+          min-height: calc(100vh - 20px);
+        }
+        .heading-block {
+          max-width: 100%;
         }
         h1 {
-          font-size: 24px;
+          font-size: 28px;
+        }
+        .slide-main {
+          font-size: 30px;
+        }
+        .slide-title {
+          font-size: 18px;
         }
         .slides-frame {
-          min-height: 240px;
+          padding: 14px;
         }
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <div class="pill">Strava Wrapped · Last 12 months</div>
-      <h1 id="title">Loading your year in motion…</h1>
-      <p id="subtitle" class="sub"></p>
-
-      <div id="login-section" class="login-wrapper" style="display: none;">
-        <button id="login-btn" class="btn">
-          <span>🔗</span> <span>Log in with Strava</span>
-        </button>
-        <p class="sub">
-          Connect Strava to see your fastest efforts, longest days, biggest climbs, and peak month —
-          all in a Spotify Wrapped–style slideshow.
-        </p>
-      </div>
-
-      <div id="slides-shell" class="slides-shell" style="display: none;">
-        <div class="slides-frame">
-          <div id="slides-container" class="slides-container"></div>
-          <div class="slides-footer">
-            <div class="nav-buttons">
-              <button id="prev-btn" class="nav-btn" aria-label="Previous slide">
-                ◀
-              </button>
-              <button id="next-btn" class="nav-btn" aria-label="Next slide">
-                ▶
+    <div class="shell">
+      <section class="card">
+        <div class="card-inner">
+          <header class="header-row">
+            <div class="heading-block">
+              <div class="pill">
+                <span class="pill-dot"></span>
+                <span>Strava Wrapped · Last 12 months</span>
+              </div>
+              <h1 id="title">Loading your year in motion…</h1>
+              <p id="subtitle" class="sub"></p>
+            </div>
+            <div id="login-section" class="login-wrapper" style="display: none;">
+              <button id="login-btn" class="btn">
+                <span>🎧</span> <span>Log in with Strava</span>
               </button>
             </div>
-            <div id="dots" class="dots"></div>
-            <div class="slides-hint">Tap arrows or dots to explore your year →</div>
-          </div>
+          </header>
+
+          <main id="slides-shell" class="slides-shell" style="display: none;">
+            <div class="slides-frame" id="slides-frame">
+              <div id="slides-container" class="slides-container"></div>
+              <div class="slides-footer">
+                <div id="dots" class="dots"></div>
+                <div class="slides-hint">
+                  Auto-advancing · swipe left/right or tap dots →
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <div id="error" class="error"></div>
+
+          <footer class="footer">
+            Prototype only. Uses Strava OAuth with tokens stored in a secure HttpOnly
+            cookie via Netlify Functions. Distances in miles, pace in min/mi.
+          </footer>
         </div>
-      </div>
-
-      <div id="error" class="error"></div>
-
-      <div class="footer">
-        Prototype only. Uses Strava OAuth with tokens stored in a secure HttpOnly cookie via
-        Netlify Functions. Distances shown in miles, pace in min/mi.
-      </div>
-    </main>
+      </section>
+    </div>
 
     <script>
       const loginBtn = document.getElementById("login-btn");
@@ -315,6 +490,7 @@
       const titleEl = document.getElementById("title");
       const subtitleEl = document.getElementById("subtitle");
       const errorEl = document.getElementById("error");
+      const slidesFrameEl = document.getElementById("slides-frame");
 
       let slides = [];
       let currentIndex = 0;
@@ -323,13 +499,15 @@
       function metersToMiles(meters) {
         return meters / 1609.34;
       }
+
       function formatMiles(meters, decimals = 1) {
         return metersToMiles(meters).toFixed(decimals);
       }
+
       function formatHours(seconds) {
         return (seconds / 3600).toFixed(1);
       }
-      // backend returns fastestPace as sec per km; convert to sec per mile
+
       function formatPaceFromSecPerKm(secPerKm) {
         if (!secPerKm || !isFinite(secPerKm)) return "-";
         const secPerMile = secPerKm * 1.609344;
@@ -340,6 +518,7 @@
           .padStart(2, "0");
         return `${min}:${sec} / mi`;
       }
+
       function monthLabel(ym) {
         const [year, m] = ym.split("-");
         const monthNames = [
@@ -359,7 +538,7 @@
         return `${monthNames[parseInt(m, 10) - 1]} ${year}`;
       }
 
-      // Polyline decode (Google-style polyline)
+      // Polyline decode
       function decodePolyline(str) {
         const coords = [];
         let index = 0;
@@ -446,42 +625,39 @@
         s.push({
           id: "overview",
           html: `
-            <div class="slide-tag">Overview</div>
-            <div class="slide-title">${athleteName || "Athlete"}, this was your year in motion.</div>
-            <div class="slide-body">
-              <div class="slide-text-block">
-                <div class="slide-main">${milesTotal} miles</div>
-                <div class="slide-sub">
-                  logged across your runs and rides in the last 12 months —
-                  that's about ${hoursTotal} hours of movement.
-                </div>
-                <div class="stat-list">
-                  <div><strong>Total time</strong><br>${hoursTotal} hours moving</div>
-                  ${
-                    stats.peakMonth
-                      ? `<div><strong>Peak month</strong><br>${monthLabel(
-                          stats.peakMonth
-                        )} · ${formatMiles(
-                          stats.peakDistance,
-                          1
-                        )} mi</div>`
-                      : ""
-                  }
-                  ${
-                    stats.fastestRun
-                      ? `<div><strong>Fastest effort</strong><br>${
-                          stats.fastestRun.name || "Fastest run"
-                        }</div>`
-                      : ""
-                  }
-                  ${
-                    stats.longestRun
-                      ? `<div><strong>Longest run</strong><br>${formatMiles(
-                          stats.longestRun.distance,
-                          1
-                        )} mi</div>`
-                      : ""
-                  }
+            <div class="slide-inner slide-inner--overview">
+              <div class="slide-content">
+                <div class="slide-top">
+                  <div class="slide-text-block">
+                    <div class="slide-tag">Overview</div>
+                    <div class="slide-title">${
+                      athleteName || "Athlete"
+                    }, your 12-month recap.</div>
+                    <div class="slide-main">${milesTotal} miles</div>
+                    <div class="slide-sub">
+                      logged across your runs and rides — about ${hoursTotal} hours on the move.
+                    </div>
+                    <div class="stat-list">
+                      <div><strong>Total time</strong><br>${hoursTotal} hours moving</div>
+                      ${
+                        stats.peakMonth
+                          ? `<div><strong>Peak month</strong><br>${monthLabel(
+                              stats.peakMonth
+                            )} · ${formatMiles(
+                              stats.peakDistance,
+                              1
+                            )} mi</div>`
+                          : ""
+                      }
+                      ${
+                        stats.fastestRun
+                          ? `<div><strong>Fastest effort</strong><br>${
+                              stats.fastestRun.name || "Fastest run"
+                            }</div>`
+                          : ""
+                      }
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -492,48 +668,53 @@
           s.push({
             id: "fastest-run",
             html: `
-              <div class="slide-tag">Fastest Run</div>
-              <div class="slide-body">
-                <div class="slide-text-block">
-                  <div class="slide-title">${
-                    stats.fastestRun.name || "Fastest run"
-                  }</div>
-                  <div class="slide-main">${formatPaceFromSecPerKm(
-                    stats.fastestPace
-                  )}</div>
-                  <div class="slide-sub">
-                    over ${formatMiles(
-                      stats.fastestRun.distance,
-                      1
-                    )} miles of running. That was your sharpest effort of the year.
+              <div class="slide-inner slide-inner--fastest">
+                <div class="slide-content">
+                  <div class="slide-top">
+                    <div class="slide-text-block">
+                      <div class="slide-tag">Fastest Run</div>
+                      <div class="slide-title">${
+                        stats.fastestRun.name || "Fastest run"
+                      }</div>
+                      <div class="slide-main">${formatPaceFromSecPerKm(
+                        stats.fastestPace
+                      )}</div>
+                      <div class="slide-sub">
+                        over ${formatMiles(
+                          stats.fastestRun.distance,
+                          1
+                        )} miles. This was your sharpest speed of the year.
+                      </div>
+                      <div class="stat-list">
+                        <div><strong>Distance</strong><br>${formatMiles(
+                          stats.fastestRun.distance,
+                          2
+                        )} mi</div>
+                        <div><strong>Elevation</strong><br>${
+                          stats.fastestRun.total_elevation_gain
+                            ? Math.round(
+                                stats.fastestRun.total_elevation_gain *
+                                  3.28084
+                              ) + " ft"
+                            : "—"
+                        }</div>
+                      </div>
+                    </div>
+                    <div class="slide-side-block">
+                      ${
+                        stats.fastestRun.map &&
+                        stats.fastestRun.map.summary_polyline
+                          ? `
+                        <svg id="map-fastest-run" class="route-map" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
+                          <rect class="route-map-bg" x="0" y="0" width="100" height="60"></rect>
+                          <path class="route-map-path" d=""></path>
+                          <path class="route-map-overlay" d=""></path>
+                        </svg>
+                      `
+                          : "<div class='slide-sub'>No route map available for this effort.</div>"
+                      }
+                    </div>
                   </div>
-                  <div class="stat-list">
-                    <div><strong>Distance</strong><br>${formatMiles(
-                      stats.fastestRun.distance,
-                      2
-                    )} mi</div>
-                    <div><strong>Elevation</strong><br>${
-                      stats.fastestRun.total_elevation_gain
-                        ? Math.round(
-                            stats.fastestRun.total_elevation_gain * 3.28084
-                          ) + " ft"
-                        : "—"
-                    }</div>
-                  </div>
-                </div>
-                <div class="slide-side-block">
-                  ${
-                    stats.fastestRun.map &&
-                    stats.fastestRun.map.summary_polyline
-                      ? `
-                    <svg id="map-fastest-run" class="route-map" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
-                      <rect class="route-map-bg" x="0" y="0" width="100" height="60"></rect>
-                      <path class="route-map-path" d=""></path>
-                      <path class="route-map-overlay" d=""></path>
-                    </svg>
-                  `
-                      : "<div class='slide-sub'>No route map available for this effort.</div>"
-                  }
                 </div>
               </div>
             `
@@ -544,45 +725,50 @@
           s.push({
             id: "longest-run",
             html: `
-              <div class="slide-tag">Endurance</div>
-              <div class="slide-body">
-                <div class="slide-text-block">
-                  <div class="slide-title">${
-                    stats.longestRun.name || "Longest run"
-                  }</div>
-                  <div class="slide-main">${formatMiles(
-                    stats.longestRun.distance,
-                    2
-                  )} miles</div>
-                  <div class="slide-sub">
-                    Your single longest run of the year — the day you just kept going.
+              <div class="slide-inner slide-inner--longrun">
+                <div class="slide-content">
+                  <div class="slide-top">
+                    <div class="slide-text-block">
+                      <div class="slide-tag">Endurance</div>
+                      <div class="slide-title">${
+                        stats.longestRun.name || "Longest run"
+                      }</div>
+                      <div class="slide-main">${formatMiles(
+                        stats.longestRun.distance,
+                        2
+                      )} miles</div>
+                      <div class="slide-sub">
+                        Your single longest run of the year — the day you just kept going.
+                      </div>
+                      <div class="stat-list">
+                        <div><strong>Elevation gain</strong><br>${
+                          stats.longestRun.total_elevation_gain
+                            ? Math.round(
+                                stats.longestRun.total_elevation_gain *
+                                  3.28084
+                              ) + " ft"
+                            : "—"
+                        }</div>
+                        <div><strong>Type</strong><br>${
+                          stats.longestRun.type || "Run"
+                        }</div>
+                      </div>
+                    </div>
+                    <div class="slide-side-block">
+                      ${
+                        stats.longestRun.map &&
+                        stats.longestRun.map.summary_polyline
+                          ? `
+                        <svg id="map-longest-run" class="route-map" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
+                          <rect class="route-map-bg" x="0" y="0" width="100" height="60"></rect>
+                          <path class="route-map-path" d=""></path>
+                          <path class="route-map-overlay" d=""></path>
+                        </svg>
+                      `
+                          : "<div class='slide-sub'>No route map available for this run.</div>"
+                      }
+                    </div>
                   </div>
-                  <div class="stat-list">
-                    <div><strong>Elevation gain</strong><br>${
-                      stats.longestRun.total_elevation_gain
-                        ? Math.round(
-                            stats.longestRun.total_elevation_gain * 3.28084
-                          ) + " ft"
-                        : "—"
-                    }</div>
-                    <div><strong>Type</strong><br>${
-                      stats.longestRun.type || "Run"
-                    }</div>
-                  </div>
-                </div>
-                <div class="slide-side-block">
-                  ${
-                    stats.longestRun.map &&
-                    stats.longestRun.map.summary_polyline
-                      ? `
-                    <svg id="map-longest-run" class="route-map" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
-                      <rect class="route-map-bg" x="0" y="0" width="100" height="60"></rect>
-                      <path class="route-map-path" d=""></path>
-                      <path class="route-map-overlay" d=""></path>
-                    </svg>
-                  `
-                      : "<div class='slide-sub'>No route map available for this run.</div>"
-                  }
                 </div>
               </div>
             `
@@ -593,45 +779,50 @@
           s.push({
             id: "longest-ride",
             html: `
-              <div class="slide-tag">Big Ride</div>
-              <div class="slide-body">
-                <div class="slide-text-block">
-                  <div class="slide-title">${
-                    stats.longestRide.name || "Longest ride"
-                  }</div>
-                  <div class="slide-main">${formatMiles(
-                    stats.longestRide.distance,
-                    2
-                  )} miles</div>
-                  <div class="slide-sub">
-                    Your longest day in the saddle — the ride that defined your year on two wheels.
+              <div class="slide-inner slide-inner--ride">
+                <div class="slide-content">
+                  <div class="slide-top">
+                    <div class="slide-text-block">
+                      <div class="slide-tag">Big Ride</div>
+                      <div class="slide-title">${
+                        stats.longestRide.name || "Longest ride"
+                      }</div>
+                      <div class="slide-main">${formatMiles(
+                        stats.longestRide.distance,
+                        2
+                      )} miles</div>
+                      <div class="slide-sub">
+                        Your longest day in the saddle — the ride that defined your year on two wheels.
+                      </div>
+                      <div class="stat-list">
+                        <div><strong>Elevation gain</strong><br>${
+                          stats.longestRide.total_elevation_gain
+                            ? Math.round(
+                                stats.longestRide.total_elevation_gain *
+                                  3.28084
+                              ) + " ft"
+                            : "—"
+                        }</div>
+                        <div><strong>Type</strong><br>${
+                          stats.longestRide.type || "Ride"
+                        }</div>
+                      </div>
+                    </div>
+                    <div class="slide-side-block">
+                      ${
+                        stats.longestRide.map &&
+                        stats.longestRide.map.summary_polyline
+                          ? `
+                        <svg id="map-longest-ride" class="route-map" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
+                          <rect class="route-map-bg" x="0" y="0" width="100" height="60"></rect>
+                          <path class="route-map-path" d=""></path>
+                          <path class="route-map-overlay" d=""></path>
+                        </svg>
+                      `
+                          : "<div class='slide-sub'>No route map available for this ride.</div>"
+                      }
+                    </div>
                   </div>
-                  <div class="stat-list">
-                    <div><strong>Elevation gain</strong><br>${
-                      stats.longestRide.total_elevation_gain
-                        ? Math.round(
-                            stats.longestRide.total_elevation_gain * 3.28084
-                          ) + " ft"
-                        : "—"
-                    }</div>
-                    <div><strong>Type</strong><br>${
-                      stats.longestRide.type || "Ride"
-                    }</div>
-                  </div>
-                </div>
-                <div class="slide-side-block">
-                  ${
-                    stats.longestRide.map &&
-                    stats.longestRide.map.summary_polyline
-                      ? `
-                    <svg id="map-longest-ride" class="route-map" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
-                      <rect class="route-map-bg" x="0" y="0" width="100" height="60"></rect>
-                      <path class="route-map-path" d=""></path>
-                      <path class="route-map-overlay" d=""></path>
-                    </svg>
-                  `
-                      : "<div class='slide-sub'>No route map available for this ride.</div>"
-                  }
                 </div>
               </div>
             `
@@ -642,41 +833,45 @@
           s.push({
             id: "biggest-climb",
             html: `
-              <div class="slide-tag">Biggest Climb Day</div>
-              <div class="slide-body">
-                <div class="slide-text-block">
-                  <div class="slide-title">${
-                    stats.highestElev.name || "Biggest climb"
-                  }</div>
-                  <div class="slide-main">${Math.round(
-                    stats.highestElev.total_elevation_gain * 3.28084
-                  )} ft</div>
-                  <div class="slide-sub">
-                    The day you did the most vertical — legs screaming, views earned.
+              <div class="slide-inner slide-inner--climb">
+                <div class="slide-content">
+                  <div class="slide-top">
+                    <div class="slide-text-block">
+                      <div class="slide-tag">Biggest Climb Day</div>
+                      <div class="slide-title">${
+                        stats.highestElev.name || "Biggest climb"
+                      }</div>
+                      <div class="slide-main">${Math.round(
+                        stats.highestElev.total_elevation_gain * 3.28084
+                      )} ft</div>
+                      <div class="slide-sub">
+                        The day you climbed the most vertical — legs screaming, views earned.
+                      </div>
+                      <div class="stat-list">
+                        <div><strong>Distance</strong><br>${formatMiles(
+                          stats.highestElev.distance,
+                          2
+                        )} mi</div>
+                        <div><strong>Type</strong><br>${
+                          stats.highestElev.type || "Activity"
+                        }</div>
+                      </div>
+                    </div>
+                    <div class="slide-side-block">
+                      ${
+                        stats.highestElev.map &&
+                        stats.highestElev.map.summary_polyline
+                          ? `
+                        <svg id="map-biggest-climb" class="route-map" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
+                          <rect class="route-map-bg" x="0" y="0" width="100" height="60"></rect>
+                          <path class="route-map-path" d=""></path>
+                          <path class="route-map-overlay" d=""></path>
+                        </svg>
+                      `
+                          : "<div class='slide-sub'>No route map available for this climb day.</div>"
+                      }
+                    </div>
                   </div>
-                  <div class="stat-list">
-                    <div><strong>Distance</strong><br>${formatMiles(
-                      stats.highestElev.distance,
-                      2
-                    )} mi</div>
-                    <div><strong>Type</strong><br>${
-                      stats.highestElev.type || "Activity"
-                    }</div>
-                  </div>
-                </div>
-                <div class="slide-side-block">
-                  ${
-                    stats.highestElev.map &&
-                    stats.highestElev.map.summary_polyline
-                      ? `
-                    <svg id="map-biggest-climb" class="route-map" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
-                      <rect class="route-map-bg" x="0" y="0" width="100" height="60"></rect>
-                      <path class="route-map-path" d=""></path>
-                      <path class="route-map-overlay" d=""></path>
-                    </svg>
-                  `
-                      : "<div class='slide-sub'>No route map available for this climb day.</div>"
-                  }
                 </div>
               </div>
             `
@@ -689,6 +884,7 @@
       function renderSlides(slideDefs) {
         slides = slideDefs;
         currentIndex = 0;
+
         slidesContainer.innerHTML = slideDefs
           .map(
             (s, idx) => `
@@ -710,25 +906,23 @@
         dots.forEach((dot) => {
           dot.addEventListener("click", () => {
             const i = Number(dot.getAttribute("data-index"));
-            goToSlide(i);
+            goToSlide(i, true);
           });
         });
 
         if (autoTimer) clearInterval(autoTimer);
         autoTimer = setInterval(() => {
-          goToSlide((currentIndex + 1) % slides.length);
-        }, 7000);
+          goToSlide((currentIndex + 1) % slides.length, false);
+        }, 6500);
       }
 
-      function goToSlide(index) {
+      function goToSlide(index, fromUser) {
         if (!slides.length) return;
         if (index < 0) index = slides.length - 1;
         if (index >= slides.length) index = 0;
         currentIndex = index;
 
-        const slideEls = Array.from(
-          slidesContainer.querySelectorAll(".slide")
-        );
+        const slideEls = Array.from(slidesContainer.querySelectorAll(".slide"));
         slideEls.forEach((el, idx) => {
           el.classList.toggle("active", idx === currentIndex);
         });
@@ -737,14 +931,60 @@
         dotEls.forEach((el, idx) => {
           el.classList.toggle("active", idx === currentIndex);
         });
+
+        if (fromUser && autoTimer) {
+          clearInterval(autoTimer);
+          autoTimer = setInterval(() => {
+            goToSlide((currentIndex + 1) % slides.length, false);
+          }, 6500);
+        }
       }
 
-      document.getElementById("prev-btn").addEventListener("click", () => {
-        goToSlide(currentIndex - 1);
-      });
-      document.getElementById("next-btn").addEventListener("click", () => {
-        goToSlide(currentIndex + 1);
-      });
+      // Swipe handling
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
+
+      function handleTouchStart(e) {
+        if (!e.touches || !e.touches.length) return;
+        const t = e.touches[0];
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+        touchEndX = t.clientX;
+        touchEndY = t.clientY;
+      }
+
+      function handleTouchMove(e) {
+        if (!e.touches || !e.touches.length) return;
+        const t = e.touches[0];
+        touchEndX = t.clientX;
+        touchEndY = t.clientY;
+      }
+
+      function handleTouchEnd() {
+        const dx = touchEndX - touchStartX;
+        const dy = touchEndY - touchStartY;
+        const threshold = 40;
+
+        if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy)) {
+          if (dx < 0) {
+            goToSlide(currentIndex + 1, true); // swipe left → next
+          } else {
+            goToSlide(currentIndex - 1, true); // swipe right → prev
+          }
+        }
+      }
+
+      if (slidesFrameEl) {
+        slidesFrameEl.addEventListener("touchstart", handleTouchStart, {
+          passive: true
+        });
+        slidesFrameEl.addEventListener("touchmove", handleTouchMove, {
+          passive: true
+        });
+        slidesFrameEl.addEventListener("touchend", handleTouchEnd);
+      }
 
       async function loadStats() {
         errorEl.textContent = "";
@@ -759,7 +999,7 @@
           if (res.status === 401) {
             titleEl.textContent = "Your Strava Wrapped";
             subtitleEl.textContent =
-              "Connect Strava to see your fastest efforts, longest days, and biggest climbs in a simple slideshow.";
+              "Tap to connect Strava and watch your recap unfold, Spotify Wrapped–style.";
             loginSection.style.display = "block";
             return;
           }
@@ -771,9 +1011,9 @@
           const data = await res.json();
           const { athleteName, stats } = data;
 
-          titleEl.textContent = `${athleteName || "Athlete"}, this was your year in motion.`;
+          titleEl.textContent = `${athleteName || "Athlete"}, this is your year in motion.`;
           subtitleEl.textContent =
-            "Swipe through your personalized Strava Wrapped: biggest mileage, fastest run, longest days, and more.";
+            "Swipe through bold cards of your total miles, fastest run, longest days, and biggest climbs.";
 
           const defs = buildSlides(athleteName, stats);
           if (!defs.length) {
@@ -785,7 +1025,6 @@
           renderSlides(defs);
           slidesShell.style.display = "block";
 
-          // render mini maps (if available)
           if (stats.fastestRun && stats.fastestRun.map && stats.fastestRun.map.summary_polyline) {
             renderPolylineToSvg(
               stats.fastestRun.map.summary_polyline,
